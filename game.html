@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="/Starclicker-app/manifest.json">
+    <link rel="apple-touch-icon" href="/Starclicker-app/icons/icon-192x192.png">
+    <title>Star Clicker: ¡En Juego!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes countdown {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .countdown-animation { animation: countdown 1s infinite; }
+    </style>
+</head>
+<body class="min-h-screen bg-black bg-[url('https://images.pexels.com/photos/1694000/pexels-photo-1694000.jpeg')] bg-cover bg-center bg-fixed flex flex-col items-center justify-center p-4">
+    <!-- Overlay para oscurecer ligeramente el fondo -->
+    <div class="absolute inset-0 bg-black opacity-60"></div>
+
+    <!-- Contenedor principal del juego -->
+    <div class="relative z-10 w-full max-w-4xl mx-auto text-center">
+        <!-- Contador de tiempo -->
+        <div id="contadorSegundos" class="absolute top-4 right-4 orbitron text-4xl font-bold text-cyan-400">
+            0s
+        </div>
+
+        <!-- Marcador -->
+        <div id="marcador" class="orbitron text-6xl font-bold text-white mb-8">0</div>
+
+        <!-- Botón de clic -->
+        <button id="botonClick" class="orbitron bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl md:text-2xl font-bold 
+                                     py-6 px-12 rounded-full transform hover:scale-105 transition-all duration-300 
+                                     shadow-lg hover:shadow-cyan-500/50 pulse-animation">
+            <i class="fas fa-hand-pointer mr-2"></i>
+            ¡Haz clic aquí!
+        </button>
+
+        <!-- Mensajes de resultado -->
+        <div id="mensajeGanaste" class="hidden orbitron text-4xl md:text-6xl font-bold text-green-500 mb-8">
+            ¡Victoria Cósmica!
+            <div class="text-2xl md:text-3xl text-cyan-400 mt-4">¡Has dominado el desafío estelar!</div>
+        </div>
+
+        <div id="mensajePerdiste" class="hidden orbitron text-4xl md:text-6xl font-bold text-red-500 mb-8">
+            ¡Tiempo Agotado!
+            <div class="text-2xl md:text-3xl text-cyan-400 mt-4">¡Inténtalo de nuevo, viajero espacial!</div>
+        </div>
+
+        <!-- Botón de reinicio -->
+        <button id="botonReset" class="hidden orbitron bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xl font-bold 
+                                     py-4 px-8 rounded-full transform hover:scale-105 transition-all duration-300 
+                                     shadow-lg hover:shadow-pink-500/50 mt-6">
+            <i class="fas fa-redo-alt mr-2"></i>
+            Intentar de nuevo
+        </button>
+    </div>
+
+    <!-- Script del juego -->
+    <script src="game.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/Starclicker-app/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

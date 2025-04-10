@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <link rel="manifest" href="/Starclicker-app/manifest.json">
+    <link rel="apple-touch-icon" href="/Starclicker-app/icons/icon-192x192.png">
+    <title>Star Clicker: Resultados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        @keyframes celebrate {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .celebration {
+            animation: celebrate 2s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-black bg-[url('https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg')] bg-cover bg-center bg-fixed flex flex-col items-center justify-center p-4">
+    <!-- Overlay para oscurecer ligeramente el fondo -->
+    <div class="absolute inset-0 bg-black opacity-60"></div>
+
+    <!-- Contenedor principal de resultados -->
+    <div class="relative z-10 w-full max-w-4xl mx-auto text-center bg-black bg-opacity-70 p-8 rounded-2xl border-2 border-cyan-500">
+        <div id="resultadoTitulo" class="orbitron text-5xl md:text-6xl font-bold mb-8 fade-in"></div>
+
+        <div class="space-y-6 fade-in" style="animation-delay: 0.3s;">
+            <!-- Estadísticas -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-gray-800 p-4 rounded-xl">
+                    <div class="text-cyan-400 text-xl mb-2">
+                        <i class="fas fa-mouse-pointer"></i> Clics Totales
+                    </div>
+                    <div id="totalClics" class="text-white text-3xl font-bold orbitron">0</div>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-xl">
+                    <div class="text-cyan-400 text-xl mb-2">
+                        <i class="fas fa-clock"></i> Tiempo Final
+                    </div>
+                    <div id="tiempoFinal" class="text-white text-3xl font-bold orbitron">0s</div>
+                </div>
+            </div>
+
+            <!-- Mensaje motivacional -->
+            <div id="mensajeMotivacional" class="text-xl md:text-2xl text-gray-300 mb-8"></div>
+
+            <!-- Botones de acción -->
+            <div class="flex flex-col md:flex-row justify-center gap-4 fade-in" style="animation-delay: 0.6s;">
+                <a href="game.html" class="inline-block">
+                    <button class="orbitron bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xl font-bold 
+                                 py-3 px-6 rounded-full transform hover:scale-105 transition-all duration-300 
+                                 shadow-lg hover:shadow-cyan-500/50">
+                        <i class="fas fa-redo-alt mr-2"></i>
+                        Intentar de nuevo
+                    </button>
+                </a>
+                <a href="index.html" class="inline-block">
+                    <button class="orbitron bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xl font-bold 
+                                 py-3 px-6 rounded-full transform hover:scale-105 transition-all duration-300 
+                                 shadow-lg hover:shadow-pink-500/50">
+                        <i class="fas fa-home mr-2"></i>
+                        Volver al inicio
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para obtener parámetros de la URL
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                resultado: params.get('resultado'),
+                clics: params.get('clics'),
+                tiempo: params.get('tiempo')
+            };
+        }
+
+        // Función para actualizar la interfaz con los resultados
+        function mostrarResultados() {
+            const params = getUrlParams();
+            const esVictoria = params.resultado === 'victoria';
+            
+            // Actualizar título y estilo según resultado
+            const titulo = document.getElementById('resultadoTitulo');
+            titulo.textContent = esVictoria ? '¡Victoria Cósmica!' : '¡Sigue Intentando!';
+            titulo.className = `orbitron text-5xl md:text-6xl font-bold mb-8 fade-in ${esVictoria ? 'text-green-500' : 'text-red-500'}`;
+
+            // Actualizar estadísticas
+            document.getElementById('totalClics').textContent = params.clics || '0';
+            document.getElementById('tiempoFinal').textContent = `${params.tiempo || '0'}s`;
+
+            // Actualizar mensaje motivacional
+            const mensajeMotivacional = document.getElementById('mensajeMotivacional');
+            mensajeMotivacional.textContent = esVictoria 
+                ? '¡Has demostrado tener la velocidad de una supernova! ¡Eres un verdadero maestro estelar!'
+                : '¡No te rindas! Cada intento te acerca más a convertirte en una leyenda galáctica.';
+        }
+
+        // Inicializar la página
+        window.onload = mostrarResultados;
+
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/Starclicker-app/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
